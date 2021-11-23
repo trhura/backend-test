@@ -1,0 +1,36 @@
+version: '2.1'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: :8080
+      DATABASE_URL: root:letmein@(mysql:3306)/test
+      REDIS_ADDR: redis:6379
+  redis:
+    image: redis:5.0-alpine
+  mysql:
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqlcheck",
+          "-u",
+          "root",
+          "-pletmein",
+          "test"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      MYSQL_ROOT_PASSWORD: letmein
+      MYSQL_DATABASE: test

@@ -22,5 +22,5 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Mount("/users", api.NewAPIRouter(dbManager))
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(envars.Port, r)
 }
