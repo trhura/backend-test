@@ -26,6 +26,21 @@ $ export PORT=":8080"
 $ go run app.go 
 ```
 
+Note that if you want to setup without using docker, you will need to create db tables manually. 
+
+```sql 
+DROP TABLE IF EXISTS user;
+
+CREATE TABLE user (
+    id              SERIAL,
+    name            VARCHAR(80) NOT NULL,
+    email           VARCHAR(250) UNIQUE,
+    password        VARCHAR(250) NOT NULL,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
 ### Testing 
 
 To run the package tests, after setting `DATABASE_URL` and `REDIS_ADDR` environment variables, use `go test`.
